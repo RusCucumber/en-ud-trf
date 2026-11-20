@@ -76,7 +76,7 @@ For Claude Code, also log in to GitHub CLI (`gh auth login`) and install the plu
 
 | File     | Role                                                                              | Loaded by                     |
 | -------- | --------------------------------------------------------------------------------- | ----------------------------- |
-| `.env`   | Project secrets & settings (e.g., `HF_TOKEN`)                                     | `src/en_ud_trf/config.py`     |
+| `.env`   | Project secrets & settings (e.g., `HF_TOKEN`)                                     | `.envrc` (via direnv)         |
 | `.envrc` | Shell environment for the project directory (e.g., load `.env`, activate `.venv`) | [direnv](https://direnv.net/) |
 
 Both files are **git-ignored** and **unreadable by Claude Code** (`.claude/settings.json`).
@@ -142,13 +142,10 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 
 ```
 .
-├── data/
-│   ├── raw/                         # Raw data files (e.g., UD treebanks)
-│   ├── processed/                   # Processed data files (e.g., .spacy corpora)
-│   └── external/                    # External data sources
+├── assets/                          # Raw data (e.g., UD treebanks in .conllu); git-ignored
+├── corpus/                          # Training data (e.g., .spacy corpora); git-ignored
 ├── src/
 │   └── en_ud_trf/                   # Main Python package
-│       └── config.py                # Paths and .env loading
 ├── tests/                           # pytest test cases
 ├── notebooks/
 │   └── python/                      # marimo notebooks

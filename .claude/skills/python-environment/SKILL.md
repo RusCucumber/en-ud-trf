@@ -28,7 +28,6 @@ Note that `{project_name}` must be replaced with your actual project package nam
 | [uv.lock](../../../uv.lock) | Locked dependency graph (committed to repo) |
 | [.python-version](../../../.python-version) | Pinned Python version (read by uv) |
 | notebooks/python/ | Marimo notebooks using the Python environment |
-| src/{project_name}/config.py | Canonical path constants and `.env` loading |
 | src/{project_name}/__init__.py | Package entry point |
 | [tests/](../../../tests/) | pytest test suite |
 
@@ -106,38 +105,15 @@ DATABASE_URL=your_database_url
 API_KEY=your_api_key
 ```
 
-Python code accesses environment variables by importing from `config.py`:
+The project does not load `.env` in Python. direnv loads it into the shell (see the README's Environment Variables section), so Python code reads the values with `os.getenv()`:
 
 ```python
-from {project_name}.config import WORK_DIR, DATA_DIR, RAW_DATA_DIR
 import os
 
 api_key = os.getenv("API_KEY")
 ```
 
-`config.py` automatically loads `.env` on import using `python-dotenv`. **Never commit `.env` to version control.**
-Note that `{project_name}` must be replaced with your actual project package name when following instructions in this skill.
-
-### 7. Use Path Constants from config.py
-
-`src/{project_name}/config.py` defines standard path constants rooted at the repository root (update folder name when you rename the package):
-
-```python
-from {project_name}.config import (
-    WORK_DIR,           # repo root
-    DATA_DIR,           # data/
-    RAW_DATA_DIR,       # data/raw/
-    PROCESSED_DATA_DIR, # data/processed/
-    EXTERNAL_DATA_DIR,  # data/external/
-    RESULT_DIR,         # results/
-    FIGURE_RESULT_DIR,  # results/figures/
-    MODEL_RESULT_DIR,   # results/models/
-    TABLE_RESULT_DIR,   # results/tables/
-)
-```
-
-Always use these constants instead of hard-coded paths.
-Note that `{project_name}` must be replaced with your actual project package name when following instructions in this skill. 
+**Never commit `.env` to version control.**
 
 ## Current Runtime Dependencies
 
@@ -186,4 +162,4 @@ Run `uv sync` to install dev dependencies, then prefix commands with `uv run` (e
 
 ### Environment variables not loading
 
-Ensure `.env` exists at the repo root (not in a subdirectory) and that `config.py` is imported before accessing `os.getenv()`.
+Ensure `.env` exists at the repo root (not in a subdirectory) and that direnv has loaded it (`direnv allow`). Python does not load `.env` by itself.

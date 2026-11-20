@@ -121,7 +121,7 @@ gh issue create \
 Measure filled pause rate per speaker to detect fluency differences.
 
 ## Data Source
-data/raw/interviews.csv
+assets/interviews.csv
 
 ## Action Steps
 - [ ] Create a branch named `analysis/filled-pause-rate-#<issue-number>`

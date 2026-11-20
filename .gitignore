@@ -1,6 +1,10 @@
-/data/**
-!/data/**/
-!/data/**/.gitkeep
+/assets/**
+!/assets/**/
+!/assets/**/.gitkeep
+
+/corpus/**
+!/corpus/**/
+!/corpus/**/.gitkeep
 
 /results/models/*.pt
 

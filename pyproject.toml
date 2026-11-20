@@ -5,31 +5,28 @@ description = "Training a spaCy transformer POS tagger and Universal Dependencie
 readme = "README.md"
 requires-python = ">= 3.11"
 authors = [
-    { name = "Ryuki Matsuura", email = "rmatsuur@andrew.cmu.edu" },
+  { name = "Ryuki Matsuura", email = "rmatsuur@andrew.cmu.edu" },
 ]
 dependencies = [
-    "marimo>=0.18.4",
-    "matplotlib>=3.10.7",
-    "numpy>=2.3.5",
-    "openai>=2.14.0",
-    "pandas>=2.3.3",
-    "pydantic>=2.12.5",
-    "python-dotenv>=1.2.1",
-    "scipy>=1.16.3",
-    "seaborn>=0.13.2",
+  "click<8.2",
+  "spacy==3.5.4",
+  "spacy-transformers==1.2.5",
+  "torch>=2.15.0",
+  "transformers==4.30.2",
 ]
 
 [dependency-groups]
 dev = [
-    "pypdf>=6.7.5",
-    "pytest>=9.0.1",
-    "ruff>=0.14.6",
-    "ty>=0.0.65",
+  "pypdf>=6.7.5",
+  "pytest>=9.0.1",
+  "ruff>=0.14.6",
+  "spacy-huggingface-hub>=0.0.10",
+  "ty>=0.0.65",
 ]
 
 [build-system]
 requires = [
-    "hatchling",
+  "hatchling",
 ]
 build-backend = "hatchling.build"
 
@@ -38,32 +35,32 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = [
-    "src/en_ud_trf",
+  "src/en_ud_trf",
 ]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 119
 include = [
-    "src/**",
-    "tests/**",
-    "notebooks/python/**",
+  "src/**",
+  "tests/**",
+  "notebooks/python/**",
 ]
 exclude = [
-    "__pycache__",
-    "__marimo__",
+  "__pycache__",
+  "__marimo__",
 ]
 
 [tool.ruff.lint]
 select = [
-    "E",
-    "W",
-    "F",
-    "I",
-    "C90",
+  "E",
+  "W",
+  "F",
+  "I",
+  "C90",
 ]
 ignore = [
-    "E203",
+  "E203",
 ]
 
 [tool.ruff.lint.mccabe]
@@ -71,21 +68,21 @@ max-complexity = 10
 
 [tool.ty.environment]
 root = [
-    "./src",
-    "./tests",
-    "./notebooks/python",
+  "./src",
+  "./tests",
+  "./notebooks/python",
 ]
 python-version = "3.11"
 
 [tool.ty.src]
 include = [
-    "src",
-    "tests",
-    "notebooks/python",
+  "src",
+  "tests",
+  "notebooks/python",
 ]
 exclude = [
-    "__pycache__",
-    "__marimo__",
+  "__pycache__",
+  "__marimo__",
 ]
 
 [tool.uv]
