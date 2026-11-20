@@ -1,26 +1,73 @@
 # en-ud-trf
 
-![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-managed-DE5FE9?logo=uv&logoColor=white)
+[![Model on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Model-en__ud__trf__l1-FFD21E)](https://huggingface.co/RusCucumber/en_ud_trf_l1)
+![Code license: MIT](https://img.shields.io/badge/code-MIT-blue)
+![Model license: CC BY-NC-SA 4.0](https://img.shields.io/badge/model-CC%20BY--NC--SA%204.0-lightgrey)
 
-Training a spaCy transformer (RoBERTa) POS tagger and Universal Dependencies parser for English, to be released under an explicit license.
+A spaCy transformer (RoBERTa) POS tagger and Universal Dependencies parser for English, released under an explicit license as **[`en_ud_trf_l1`](https://huggingface.co/RusCucumber/en_ud_trf_l1)**.
 
 The model is meant to replace `en_ud_L1_combined_trf` in [V-CAT](https://github.com/RusCucumber/V-CAT) (see V-CAT #235). That model repackages the one from Kyle & Eguchi (2024), but neither its [source repository](https://github.com/LCR-ADS-Lab/l2-nlp-training-spacy) nor its [OSF page](https://osf.io/axw3g/) states a license, so it cannot be redistributed. This repository retrains an equivalent model from openly licensed treebanks so that V-CAT and other applications can depend on it.
 
-> [!NOTE]
-> Work in progress. The training pipeline below is the plan; it is not implemented yet.
-
 ## Contents
 
+- [Quick Start](#quick-start)
+- [Model](#model)
 - [Target Model](#target-model)
 - [Pipeline](#pipeline)
 - [Setup](#setup)
 - [Training](#training)
+- [Packaging](#packaging)
 - [Environment Variables](#environment-variables)
 - [Workflow](#workflow)
 - [Coding Agent (Claude Code)](#coding-agent-claude-code)
 - [Project Structure](#project-structure)
+- [License](#license)
+- [Citation](#citation)
 - [References](#references)
+
+## Quick Start
+
+The model is a wheel on the Hugging Face Hub. It needs `spacy>=3.5.3,<3.6.0` and `spacy-transformers==1.2.5` (installed as its dependencies).
+
+```bash
+pip install https://huggingface.co/RusCucumber/en_ud_trf_l1/resolve/main/en_ud_trf_l1-1.0.0-py3-none-any.whl
+# or, in a uv project:
+uv add "en_ud_trf_l1 @ https://huggingface.co/RusCucumber/en_ud_trf_l1/resolve/main/en_ud_trf_l1-1.0.0-py3-none-any.whl"
+```
+
+```python
+import spacy
+
+nlp = spacy.load("en_ud_trf_l1")
+doc = nlp("She said that she had finished the report.")
+for token in doc:
+    print(token.text, token.tag_, token.dep_, token.head.text)
+```
+
+`token.tag_` holds Penn Treebank XPOS tags and `token.dep_` holds UD v2 relations. The pipeline has no lemmatizer and does not predict UPOS (`token.pos_` is empty); add components from another pipeline (e.g., `en_core_web_sm`) if you need them.
+
+## Model
+
+| Item          | Value                                                                                         |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| Name          | `en_ud_trf_l1` 1.0.0                                                                          |
+| Pipeline      | `transformer` (`roberta-base`) → `tagger` → `parser`                                          |
+| Training data | UD_English-EWT, -GUM, -Pronouns, -PUD (see [`meta.json`](./meta.json))                        |
+| Config        | [`configs/en_ud_trf_l1.cfg`](./configs/en_ud_trf_l1.cfg)                                      |
+| Download      | [huggingface.co/RusCucumber/en_ud_trf_l1](https://huggingface.co/RusCucumber/en_ud_trf_l1)    |
+| License       | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (non-commercial use)    |
+
+Scores (`spacy evaluate`; test-set JSON in [`metrics/`](./metrics/)):
+
+| Split                                    | tag_acc | UAS   | LAS   | sents_f |
+| ---------------------------------------- | ------- | ----- | ----- | ------- |
+| dev (combined)                           | 0.972   | 0.934 | 0.911 | 0.914   |
+| test (combined)                          | 0.970   | 0.925 | 0.902 | 0.890   |
+| test (EWT)                               | 0.962   | 0.920 | 0.897 | 0.861   |
+| test (GUM)                               | 0.977   | 0.928 | 0.904 | 0.949   |
+| `en_ud_L1_combined_trf` v1.0.2 (dev)     | 0.972   | 0.937 | 0.917 | –       |
 
 ## Target Model
 
@@ -35,7 +82,7 @@ The model must stay compatible with how V-CAT uses the current `en_ud_L1_combine
 | Library versions     | `spacy>=3.5.3,<3.6.0`, `spacy-transformers==1.2.5`, `transformers<4.31` (same pins as V-CAT) |
 | Current scores (dev) | tag_acc 0.972 / UAS 0.937 / LAS 0.917                                                        |
 
-**License**: the model's license follows its training data. With [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT) (CC BY-SA 4.0) the model would be released under CC BY-SA 4.0 (`roberta-base` is MIT). The final treebank selection is still open.
+**License**: the model's license follows its training data. [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM) is CC BY-NC-SA 4.0, the most restrictive of the treebanks used, so the model is released under CC BY-NC-SA 4.0 (`roberta-base` is MIT). See [License](#license).
 
 ## Pipeline
 
@@ -98,6 +145,13 @@ uv run python -m spacy package training/model-best packages/ \
 ```
 
 The wheel is written to `packages/en_ud_trf_l1-<version>/dist/`. `--build wheel` needs the `wheel` package (dev dependency).
+
+Push it to the Hugging Face Hub with `spacy-huggingface-hub` (dev dependency; needs a write token, e.g., `HF_TOKEN` in `.env`):
+
+```bash
+uv run python -m spacy huggingface-hub push \
+  packages/en_ud_trf_l1-1.0.0/dist/en_ud_trf_l1-1.0.0-py3-none-any.whl
+```
 
 ## Environment Variables
 
@@ -199,12 +253,43 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 │
 ├── pyproject.toml                   # Python project configuration
 ├── uv.lock                          # uv lock file
+├── LICENSE                          # MIT (code); the model is CC BY-NC-SA 4.0
+├── CITATION.cff                     # Citation metadata
 ├── meta.json                        # Model metadata for spacy package (name, version, license, sources)
 ├── .python-version                  # Python version
 ├── Dockerfile                       # Python test image
 ├── CLAUDE.local.md                        # Project instructions for Claude (create per project)
 └── README.md
 ```
+
+## License
+
+- **Code** (source, configs, scripts, docs): [MIT](./LICENSE).
+- **Model** (`en_ud_trf_l1`) and **evaluation outputs** (`metrics/`): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), inherited from the training treebanks. Commercial use is not permitted, and derivatives must be shared under the same license.
+
+| Training source                                                                   | License         |
+| --------------------------------------------------------------------------------- | --------------- |
+| [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT)           | CC BY-SA 4.0    |
+| [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM)           | CC BY-NC-SA 4.0 |
+| [UD_English-Pronouns](https://github.com/UniversalDependencies/UD_English-Pronouns) | CC BY-SA 4.0    |
+| [UD_English-PUD](https://github.com/UniversalDependencies/UD_English-PUD)           | CC BY-SA 3.0    |
+| [roberta-base](https://huggingface.co/roberta-base)                                 | MIT             |
+
+## Citation
+
+If you use the model or this code, please cite it ([`CITATION.cff`](./CITATION.cff); GitHub's "Cite this repository" button gives APA and BibTeX):
+
+```bibtex
+@software{matsuura_2026_en_ud_trf_l1,
+  author  = {Matsuura, Ryuki},
+  title   = {en\_ud\_trf\_l1: a spaCy transformer POS tagger and Universal Dependencies parser for English},
+  version = {1.0.0},
+  year    = {2026},
+  url     = {https://huggingface.co/RusCucumber/en_ud_trf_l1}
+}
+```
+
+Please also cite Kyle & Eguchi (2024), whose training setup this model reproduces, and the UD treebanks listed above.
 
 ## References
 

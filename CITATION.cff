@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: "If you use the en_ud_trf_l1 model or this code, please cite it as below."
+type: software
+title: "en_ud_trf_l1: a spaCy transformer POS tagger and Universal Dependencies parser for English"
+abstract: >-
+  A RoBERTa-based spaCy pipeline (transformer, tagger, parser) that predicts
+  Penn Treebank XPOS tags and UD v2 dependency relations for English, trained
+  on openly licensed UD treebanks (EWT, GUM, Pronouns, PUD) as a redistributable
+  replacement for en_ud_L1_combined_trf in V-CAT.
+authors:
+  - family-names: Matsuura
+    given-names: Ryuki
+version: 1.0.0
+date-released: "2026-11-20"
+license:
+  - MIT
+  - CC-BY-NC-SA-4.0
+repository-code: "https://github.com/RusCucumber/en-ud-trf"
+url: "https://huggingface.co/RusCucumber/en_ud_trf_l1"
+keywords:
+  - spaCy
+  - Universal Dependencies
+  - dependency parsing
+  - part-of-speech tagging
+  - RoBERTa
+  - English
+references:
+  - type: article
+    title: "Evaluating NLP models with written and spoken L2 samples"
+    authors:
+      - family-names: Kyle
+        given-names: Kristopher
+      - family-names: Eguchi
+        given-names: Masaki
+    journal: "Research Methods in Applied Linguistics"
+    volume: 3
+    issue: "2"
+    start: "100120"
+    year: 2024
+    doi: 10.1016/j.rmal.2024.100120
+  - type: conference-paper
+    title: "A dependency treebank of spoken second language English"
+    authors:
+      - family-names: Kyle
+        given-names: Kristopher
+      - family-names: Eguchi
+        given-names: Masaki
+      - family-names: Miller
+        given-names: A.
+      - family-names: Sither
+        given-names: T.
+    collection-title: "Proceedings of the 17th Workshop on Innovative Use of NLP for Building Educational Applications (BEA 2022)"
+    start: "39"
+    end: "45"
+    year: 2022
+    doi: 10.18653/v1/2022.bea-1.7
