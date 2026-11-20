@@ -162,3 +162,10 @@ CLAUDE.local.md
 secrets/
 *.pem
 *.key
+
+# Personal tooling (Claude Code, editors) and its docs
+/.claude/
+/.vscode/
+/.zed/
+/docs/claude_code.md
+/docs/manual_setup_flow.md

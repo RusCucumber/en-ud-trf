@@ -21,7 +21,6 @@ The model is meant to replace `en_ud_L1_combined_trf` in [V-CAT](https://github.
 - [Packaging](#packaging)
 - [Environment Variables](#environment-variables)
 - [Workflow](#workflow)
-- [Coding Agent (Claude Code)](#coding-agent-claude-code)
 - [Project Structure](#project-structure)
 - [License](#license)
 - [Citation](#citation)
@@ -107,7 +106,7 @@ graph LR
 
 ## Setup
 
-Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and [GitHub CLI](https://cli.github.com/). Training needs a CUDA GPU.
+Requires [uv](https://docs.astral.sh/uv/getting-started/installation/). Training needs a CUDA GPU.
 
 ```bash
 git clone https://github.com/RusCucumber/en-ud-trf.git
@@ -115,11 +114,6 @@ cd en-ud-trf
 uv sync
 uv sync --extra cupy   # on a CUDA 13 GPU machine: adds CuPy (cupy-cuda13x) for training
 ```
-
-For Claude Code, also log in to GitHub CLI (`gh auth login`) and install the plugins ([docs/manual_setup_flow.md](./docs/manual_setup_flow.md), steps 2 and 4).
-
-> [!IMPORTANT]
-> Claude Code's git commands run over **HTTPS + GitHub CLI** (SSH does not work inside its sandbox). This is set only for Claude via `env` in `.claude/settings.json` — your own SSH setup and global git/gh config stay unchanged; just run `gh auth login` once.
 
 ## Training
 
@@ -160,7 +154,7 @@ uv run python -m spacy huggingface-hub push \
 | `.env`   | Project secrets & settings (e.g., `HF_TOKEN`)                                     | `.envrc` (via direnv)         |
 | `.envrc` | Shell environment for the project directory (e.g., load `.env`, activate `.venv`) | [direnv](https://direnv.net/) |
 
-Both files are **git-ignored** and **unreadable by Claude Code** (`.claude/settings.json`).
+Both files are **git-ignored**.
 Keep values in `.env` and let `.envrc` just load it, so that Python and the shell share one source:
 
 ```bash
@@ -177,11 +171,6 @@ brew install direnv                                  # or see https://direnv.net
 echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc         # use your shell's hook
 direnv allow                                         # run again after every .envrc change
 ```
-
-- **Zed**: `.zed/settings.json` sets `"load_direnv": "direct"`, so language servers (ty, ruff), tasks and the terminal get the `.envrc` variables. Reopen the project after `direnv allow`.
-
-> [!WARNING]
-> Variables exported by direnv are visible to commands Claude Code runs (if launched from that shell), even though it cannot read the files. Do not export secrets you do not want an agent to use.
 
 ## Workflow
 
@@ -204,20 +193,9 @@ This repository follows **GitHub Flow**: branch off `main`, open a pull request,
 | `chore/`      | any               | Environment & dependency updates, other tasks | General Task     |
 
 Descriptive names should be concise, lowercase, and hyphen-separated.
-Claude Code follows the same conventions through the `git-strategy` skill.
 
 > [!NOTE]
 > The Python test workflow (`.github/workflows/python_tests.yaml`, which runs pytest in the `Dockerfile` image) is currently disabled until tests exist.
-
-## Coding Agent (Claude Code)
-
-This repository is preconfigured for Claude Code. Details: **[docs/claude_code.md](./docs/claude_code.md)**.
-
-- **Plugins**: [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode), [superpowers](https://github.com/obra/superpowers), [genshijin](https://github.com/InterfaceX-co-jp/genshijin), and [claude-mem](https://github.com/thedotmack/claude-mem). They are not downloaded automatically — install them with [step 4 of the manual setup](./docs/manual_setup_flow.md#4-install-claude-code-plugins) (`claude-mem` needs [Bun](https://bun.sh/)).
-- **Rules** (`.claude/rules/`): short project rules; most load only when Claude touches matching files.
-- **Skills** (`.claude/skills/`): Python environment, notebooks, git workflow, and document tools. Update the upstream ones with `gh skill update`.
-- **Instructions**: write project-specific instructions in the root `CLAUDE.md`, not in `.claude/CLAUDE.md` (managed by oh-my-claudecode).
-- **Extras**: second-opinion reviews with Codex (`/oh-my-claudecode:ask codex`), an Obsidian vault via MCP, and token-saving tips.
 
 ## Project Structure
 
@@ -231,21 +209,12 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── packages/                        # spacy package output (wheel); git-ignored
 ├── tests/                           # pytest test cases
 ├── metrics/                         # Evaluation scores (spacy evaluate JSON output)
-├── docs/
-│   ├── manual_setup_flow.md         # Manual setup steps
-│   └── claude_code.md               # Claude Code configuration
 │
-├── .claude/
-│   ├── settings.json                # Plugins, permissions, sandbox
-│   ├── rules/                       # Project rules for Claude
-│   └── skills/                      # Agent Skills
 ├── .github/
 │   ├── ISSUE_TEMPLATE/              # Issue templates
 │   ├── workflows/                   # Project board automation, Python tests
 │   ├── labels.json                  # Issue labels
 │   └── ruleset-main_push_block.json # Branch ruleset for main
-├── .vscode/                         # VS Code settings
-├── .zed/                            # Zed settings and tasks
 │
 ├── pyproject.toml                   # Python project configuration
 ├── uv.lock                          # uv lock file
@@ -254,7 +223,6 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── meta.json                        # Model metadata for spacy package (name, version, license, sources)
 ├── .python-version                  # Python version
 ├── Dockerfile                       # Python test image
-├── CLAUDE.local.md                        # Project instructions for Claude (create per project)
 └── README.md
 ```
 
