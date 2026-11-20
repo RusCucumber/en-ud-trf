@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: >-
+  If you use the en_ud_trf_l1 model, please cite Kyle & Eguchi (2024) (the
+  preferred citation below). Cite this software in addition only when you need
+  to refer to this specific model or code.
+type: software
+title: "en_ud_trf_l1: a spaCy transformer POS tagger and Universal Dependencies parser for English"
+abstract: >-
+  A RoBERTa-based spaCy pipeline (transformer, tagger, parser) that predicts
+  Penn Treebank XPOS tags and UD v2 dependency relations for English, trained
+  on openly licensed UD treebanks (EWT, GUM, Pronouns, PUD) as a redistributable
+  replacement for en_ud_L1_combined_trf in V-CAT.
+authors:
+  - family-names: Matsuura
+    given-names: Ryuki
+    orcid: "https://orcid.org/0000-0002-9429-6257"
+version: 1.0.0
+date-released: "2026-11-20"
+license:
+  - MIT
+  - CC-BY-NC-SA-4.0
+repository-code: "https://github.com/RusCucumber/en-ud-trf"
+url: "https://huggingface.co/RusCucumber/en_ud_trf_l1"
+keywords:
+  - spaCy
+  - Universal Dependencies
+  - dependency parsing
+  - part-of-speech tagging
+  - RoBERTa
+  - English
+preferred-citation:
+  type: article
+  title: "Evaluating NLP models with written and spoken L2 samples"
+  authors:
+    - family-names: Kyle
+      given-names: Kristopher
+    - family-names: Eguchi
+      given-names: Masaki
+  journal: "Research Methods in Applied Linguistics"
+  volume: 3
+  issue: "2"
+  start: "100120"
+  year: 2024
+  doi: 10.1016/j.rmal.2024.100120
+references:
+  - type: article
+    title: "Evaluating NLP models with written and spoken L2 samples"
+    authors:
+      - family-names: Kyle
+        given-names: Kristopher
+      - family-names: Eguchi
+        given-names: Masaki
+    journal: "Research Methods in Applied Linguistics"
+    volume: 3
+    issue: "2"
+    start: "100120"
+    year: 2024
+    doi: 10.1016/j.rmal.2024.100120

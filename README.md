@@ -1,26 +1,72 @@
 # en-ud-trf
 
-![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-managed-DE5FE9?logo=uv&logoColor=white)
+[![Model on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Model-en__ud__trf__l1-FFD21E)](https://huggingface.co/RusCucumber/en_ud_trf_l1)
+![Code license: MIT](https://img.shields.io/badge/code-MIT-blue)
+![Model license: CC BY-NC-SA 4.0](https://img.shields.io/badge/model-CC%20BY--NC--SA%204.0-lightgrey)
 
-Training a spaCy transformer (RoBERTa) POS tagger and Universal Dependencies parser for English, to be released under an explicit license.
+A spaCy transformer (RoBERTa) POS tagger and Universal Dependencies parser for English, released under an explicit license as **[`en_ud_trf_l1`](https://huggingface.co/RusCucumber/en_ud_trf_l1)**.
 
 The model is meant to replace `en_ud_L1_combined_trf` in [V-CAT](https://github.com/RusCucumber/V-CAT) (see V-CAT #235). That model repackages the one from Kyle & Eguchi (2024), but neither its [source repository](https://github.com/LCR-ADS-Lab/l2-nlp-training-spacy) nor its [OSF page](https://osf.io/axw3g/) states a license, so it cannot be redistributed. This repository retrains an equivalent model from openly licensed treebanks so that V-CAT and other applications can depend on it.
 
-> [!NOTE]
-> Work in progress. The training pipeline below is the plan; it is not implemented yet.
-
 ## Contents
 
+- [Quick Start](#quick-start)
+- [Model](#model)
 - [Target Model](#target-model)
 - [Pipeline](#pipeline)
 - [Setup](#setup)
 - [Training](#training)
+- [Packaging](#packaging)
 - [Environment Variables](#environment-variables)
 - [Workflow](#workflow)
-- [Coding Agent (Claude Code)](#coding-agent-claude-code)
 - [Project Structure](#project-structure)
+- [License](#license)
+- [Citation](#citation)
 - [References](#references)
+
+## Quick Start
+
+The model is a wheel on the Hugging Face Hub. It needs `spacy>=3.5.3,<3.6.0` and `spacy-transformers==1.2.5` (installed as its dependencies).
+
+```bash
+pip install https://huggingface.co/RusCucumber/en_ud_trf_l1/resolve/main/en_ud_trf_l1-1.0.0-py3-none-any.whl
+# or, in a uv project:
+uv add "en_ud_trf_l1 @ https://huggingface.co/RusCucumber/en_ud_trf_l1/resolve/main/en_ud_trf_l1-1.0.0-py3-none-any.whl"
+```
+
+```python
+import spacy
+
+nlp = spacy.load("en_ud_trf_l1")
+doc = nlp("She said that she had finished the report.")
+for token in doc:
+    print(token.text, token.tag_, token.dep_, token.head.text)
+```
+
+`token.tag_` holds Penn Treebank XPOS tags and `token.dep_` holds UD v2 relations. The pipeline has no lemmatizer and does not predict UPOS (`token.pos_` is empty); add components from another pipeline (e.g., `en_core_web_sm`) if you need them.
+
+## Model
+
+| Item          | Value                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| Name          | `en_ud_trf_l1` 1.0.0                                                                       |
+| Pipeline      | `transformer` (`roberta-base`) → `tagger` → `parser`                                       |
+| Training data | UD_English-EWT, -GUM, -Pronouns, -PUD (see [`meta.json`](./meta.json))                     |
+| Config        | [`configs/en_ud_trf_l1.cfg`](./configs/en_ud_trf_l1.cfg)                                   |
+| Download      | [huggingface.co/RusCucumber/en_ud_trf_l1](https://huggingface.co/RusCucumber/en_ud_trf_l1) |
+| License       | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (non-commercial use) |
+
+Scores (`spacy evaluate`; test-set JSON in [`metrics/`](./metrics/)):
+
+| Split                                | tag_acc | UAS   | LAS   | sents_f |
+| ------------------------------------ | ------- | ----- | ----- | ------- |
+| dev (combined)                       | 0.972   | 0.934 | 0.911 | 0.914   |
+| test (combined)                      | 0.970   | 0.925 | 0.902 | 0.890   |
+| test (EWT)                           | 0.962   | 0.920 | 0.897 | 0.861   |
+| test (GUM)                           | 0.977   | 0.928 | 0.904 | 0.949   |
+| `en_ud_L1_combined_trf` v1.0.2 (dev) | 0.972   | 0.937 | 0.917 | –       |
 
 ## Target Model
 
@@ -35,7 +81,7 @@ The model must stay compatible with how V-CAT uses the current `en_ud_L1_combine
 | Library versions     | `spacy>=3.5.3,<3.6.0`, `spacy-transformers==1.2.5`, `transformers<4.31` (same pins as V-CAT) |
 | Current scores (dev) | tag_acc 0.972 / UAS 0.937 / LAS 0.917                                                        |
 
-**License**: the model's license follows its training data. With [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT) (CC BY-SA 4.0) the model would be released under CC BY-SA 4.0 (`roberta-base` is MIT). The final treebank selection is still open.
+**License**: the model's license follows its training data. [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM) is CC BY-NC-SA 4.0, the most restrictive of the treebanks used, so the model is released under CC BY-NC-SA 4.0 (`roberta-base` is MIT). See [License](#license).
 
 ## Pipeline
 
@@ -55,12 +101,12 @@ graph LR
 3. **Config**: start from `spacy init config --pipeline tagger,parser --optimize accuracy --gpu`, then match the current model's settings (e.g., `max_steps` 20000, `warmup_linear` with `initial_rate` 1e-4).
 4. **Train** on a CUDA GPU; record the seed, treebank release, config, and library versions.
 5. **Evaluate** on the test set against the current model (scores saved as JSON in `metrics/`), and run V-CAT's regression checks (frequency tables of syntactic frames).
-6. **Package** as a wheel under a new name (e.g., `en_ud_trf`) with the license and sources in `meta.json`.
+6. **Package** as a wheel under a new name (`en_ud_trf_l1`) with the license and sources in `meta.json`.
 7. **Release** publicly on the Hugging Face Hub, so that `pip`/`uv` can install it without authentication.
 
 ## Setup
 
-Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and [GitHub CLI](https://cli.github.com/). Training needs a CUDA GPU.
+Requires [uv](https://docs.astral.sh/uv/getting-started/installation/). Training needs a CUDA GPU.
 
 ```bash
 git clone https://github.com/RusCucumber/en-ud-trf.git
@@ -68,11 +114,6 @@ cd en-ud-trf
 uv sync
 uv sync --extra cupy   # on a CUDA 13 GPU machine: adds CuPy (cupy-cuda13x) for training
 ```
-
-For Claude Code, also log in to GitHub CLI (`gh auth login`) and install the plugins ([docs/manual_setup_flow.md](./docs/manual_setup_flow.md), steps 2 and 4).
-
-> [!IMPORTANT]
-> Claude Code's git commands run over **HTTPS + GitHub CLI** (SSH does not work inside its sandbox). This is set only for Claude via `env` in `.claude/settings.json` — your own SSH setup and global git/gh config stay unchanged; just run `gh auth login` once.
 
 ## Training
 
@@ -88,6 +129,24 @@ uv run python -m spacy train configs/en_ud_trf_l1.cfg -o training/ --gpu-id 0 \
 > [!IMPORTANT]
 > `--code scripts/cupy_compat.py` is required with CuPy 13. thinc 8.1.x (pinned by spaCy 3.5) calls `cupy.cublas.nrm2` for gradient clipping, but CuPy 13 no longer imports the `cupy.cublas` submodule automatically, so training aborts at the first update with `AttributeError: module 'cupy' has no attribute 'cublas'`. The script just runs `import cupy.cublas`. Upgrading thinc (≥8.2) is not possible under `spacy<3.6`, and CuPy 12 has no CUDA 13 build.
 
+## Packaging
+
+Build a wheel from the trained model with the metadata in `meta.json` (`lang` + `name` give the package name `en_ud_trf_l1`):
+
+```bash
+uv run python -m spacy package training/model-best packages/ \
+  --meta-path meta.json --build wheel --force
+```
+
+The wheel is written to `packages/en_ud_trf_l1-<version>/dist/`. `--build wheel` needs the `wheel` package (dev dependency).
+
+Push it to the Hugging Face Hub with `spacy-huggingface-hub` (dev dependency; needs a write token, e.g., `HF_TOKEN` in `.env`):
+
+```bash
+uv run python -m spacy huggingface-hub push \
+  packages/en_ud_trf_l1-1.0.0/dist/en_ud_trf_l1-1.0.0-py3-none-any.whl
+```
+
 ## Environment Variables
 
 | File     | Role                                                                              | Loaded by                     |
@@ -95,7 +154,7 @@ uv run python -m spacy train configs/en_ud_trf_l1.cfg -o training/ --gpu-id 0 \
 | `.env`   | Project secrets & settings (e.g., `HF_TOKEN`)                                     | `.envrc` (via direnv)         |
 | `.envrc` | Shell environment for the project directory (e.g., load `.env`, activate `.venv`) | [direnv](https://direnv.net/) |
 
-Both files are **git-ignored** and **unreadable by Claude Code** (`.claude/settings.json`).
+Both files are **git-ignored**.
 Keep values in `.env` and let `.envrc` just load it, so that Python and the shell share one source:
 
 ```bash
@@ -112,11 +171,6 @@ brew install direnv                                  # or see https://direnv.net
 echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc         # use your shell's hook
 direnv allow                                         # run again after every .envrc change
 ```
-
-- **Zed**: `.zed/settings.json` sets `"load_direnv": "direct"`, so language servers (ty, ruff), tasks and the terminal get the `.envrc` variables. Reopen the project after `direnv allow`.
-
-> [!WARNING]
-> Variables exported by direnv are visible to commands Claude Code runs (if launched from that shell), even though it cannot read the files. Do not export secrets you do not want an agent to use.
 
 ## Workflow
 
@@ -139,20 +193,9 @@ This repository follows **GitHub Flow**: branch off `main`, open a pull request,
 | `chore/`      | any               | Environment & dependency updates, other tasks | General Task     |
 
 Descriptive names should be concise, lowercase, and hyphen-separated.
-Claude Code follows the same conventions through the `git-strategy` skill.
 
 > [!NOTE]
 > The Python test workflow (`.github/workflows/python_tests.yaml`, which runs pytest in the `Dockerfile` image) is currently disabled until tests exist.
-
-## Coding Agent (Claude Code)
-
-This repository is preconfigured for Claude Code. Details: **[docs/claude_code.md](./docs/claude_code.md)**.
-
-- **Plugins**: [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode), [superpowers](https://github.com/obra/superpowers), [genshijin](https://github.com/InterfaceX-co-jp/genshijin), and [claude-mem](https://github.com/thedotmack/claude-mem). They are not downloaded automatically — install them with [step 4 of the manual setup](./docs/manual_setup_flow.md#4-install-claude-code-plugins) (`claude-mem` needs [Bun](https://bun.sh/)).
-- **Rules** (`.claude/rules/`): short project rules; most load only when Claude touches matching files.
-- **Skills** (`.claude/skills/`): Python environment, notebooks, git workflow, and document tools. Update the upstream ones with `gh skill update`.
-- **Instructions**: write project-specific instructions in the root `CLAUDE.md`, not in `.claude/CLAUDE.md` (managed by oh-my-claudecode).
-- **Extras**: second-opinion reviews with Codex (`/oh-my-claudecode:ask codex`), an Obsidian vault via MCP, and token-saving tips.
 
 ## Project Structure
 
@@ -163,38 +206,72 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── configs/                         # spaCy training configs
 ├── scripts/                         # Helper code for spaCy CLI (--code), e.g., CuPy 13 workaround
 ├── training/                        # spacy train output (model-best, model-last); git-ignored
-├── src/
-│   └── en_ud_trf/                   # Main Python package
+├── packages/                        # spacy package output (wheel); git-ignored
 ├── tests/                           # pytest test cases
-├── notebooks/
-│   └── python/                      # marimo notebooks
 ├── metrics/                         # Evaluation scores (spacy evaluate JSON output)
-├── docs/
-│   ├── manual_setup_flow.md         # Manual setup steps
-│   └── claude_code.md               # Claude Code configuration
 │
-├── .claude/
-│   ├── settings.json                # Plugins, permissions, sandbox
-│   ├── rules/                       # Project rules for Claude
-│   └── skills/                      # Agent Skills
 ├── .github/
 │   ├── ISSUE_TEMPLATE/              # Issue templates
 │   ├── workflows/                   # Project board automation, Python tests
 │   ├── labels.json                  # Issue labels
 │   └── ruleset-main_push_block.json # Branch ruleset for main
-├── .vscode/                         # VS Code settings
-├── .zed/                            # Zed settings and tasks
 │
 ├── pyproject.toml                   # Python project configuration
 ├── uv.lock                          # uv lock file
+├── LICENSE                          # MIT (code); the model is CC BY-NC-SA 4.0
+├── CITATION.cff                     # Citation metadata
+├── meta.json                        # Model metadata for spacy package (name, version, license, sources)
 ├── .python-version                  # Python version
 ├── Dockerfile                       # Python test image
-├── CLAUDE.local.md                        # Project instructions for Claude (create per project)
 └── README.md
 ```
+
+## License
+
+- **Code** (source, configs, scripts, docs): [MIT](./LICENSE).
+- **Model** (`en_ud_trf_l1`) and **evaluation outputs** (`metrics/`): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), inherited from the training treebanks. Commercial use is not permitted, and derivatives must be shared under the same license.
+
+| Training source                                                                     | License         |
+| ----------------------------------------------------------------------------------- | --------------- |
+| [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT)           | CC BY-SA 4.0    |
+| [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM)           | CC BY-NC-SA 4.0 |
+| [UD_English-Pronouns](https://github.com/UniversalDependencies/UD_English-Pronouns) | CC BY-SA 4.0    |
+| [UD_English-PUD](https://github.com/UniversalDependencies/UD_English-PUD)           | CC BY-SA 3.0    |
+| [roberta-base](https://huggingface.co/roberta-base)                                 | MIT             |
+
+## Citation
+
+> [!IMPORTANT]
+> **If you use this model in research, please cite Kyle & Eguchi (2024) as the primary reference.** This model reproduces their training setup with openly licensed data; the method and its evaluation are theirs.
+
+```bibtex
+@article{kyle_eguchi_2024,
+  author  = {Kyle, Kristopher and Eguchi, Masaki},
+  title   = {Evaluating {NLP} models with written and spoken {L2} samples},
+  journal = {Research Methods in Applied Linguistics},
+  volume  = {3},
+  number  = {2},
+  pages   = {100120},
+  year    = {2024},
+  doi     = {10.1016/j.rmal.2024.100120}
+}
+```
+
+If you also need to refer to this specific model or code (e.g., for reproducibility), cite it in addition ([`CITATION.cff`](./CITATION.cff)):
+
+```bibtex
+@software{matsuura_2026_en_ud_trf_l1,
+  author  = {Matsuura, Ryuki},
+  title   = {en\_ud\_trf\_l1: a spaCy transformer POS tagger and Universal Dependencies parser for English},
+  version = {1.0.0},
+  year    = {2026},
+  url     = {https://huggingface.co/RusCucumber/en_ud_trf_l1}
+}
+```
+
+Please also credit the UD treebanks listed above.
 
 ## References
 
 - Kyle, K., & Eguchi, M. (2024). Evaluating NLP models with written and spoken L2 samples. _Research Methods in Applied Linguistics_, _3_(2), 100120. https://doi.org/10.1016/j.rmal.2024.100120
-- Kyle, K., Eguchi, M., Miller, A., & Sither, T. (2022). A dependency treebank of spoken second language English. _BEA 2022_, 39–45. https://doi.org/10.18653/v1/2022.bea-1.7
 - spaCy documentation: [Training](https://spacy.io/usage/training), [CLI](https://spacy.io/api/cli), [Projects](https://spacy.io/usage/projects)

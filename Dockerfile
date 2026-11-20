@@ -8,7 +8,7 @@ COPY pyproject.toml .
 COPY .python-version .
 COPY README.md .
 
-COPY src ./src
+COPY scripts ./scripts
 COPY tests ./tests
 
 RUN uv sync --no-dev

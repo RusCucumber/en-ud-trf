@@ -3,6 +3,8 @@ name = "en-ud-trf"
 version = "0.1.0"
 description = "Training a spaCy transformer POS tagger and Universal Dependencies parser for English, for use in V-CAT"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">= 3.11"
 authors = [
   { name = "Ryuki Matsuura", email = "rmatsuur@andrew.cmu.edu" },
@@ -28,33 +30,18 @@ dev = [
   "ruff>=0.14.6",
   "spacy-huggingface-hub>=0.0.10",
   "ty>=0.0.65",
-]
-
-[build-system]
-requires = [
-  "hatchling",
-]
-build-backend = "hatchling.build"
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = [
-  "src/en_ud_trf",
+  "wheel>=0.48.0",
 ]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 119
 include = [
-  "src/**",
+  "scripts/**",
   "tests/**",
-  "notebooks/python/**",
 ]
 exclude = [
   "__pycache__",
-  "__marimo__",
 ]
 
 [tool.ruff.lint]
@@ -74,23 +61,18 @@ max-complexity = 10
 
 [tool.ty.environment]
 root = [
-  "./src",
   "./tests",
-  "./notebooks/python",
 ]
 python-version = "3.11"
 
 [tool.ty.src]
 include = [
-  "src",
   "tests",
-  "notebooks/python",
 ]
 exclude = [
   "__pycache__",
-  "__marimo__",
 ]
 
 [tool.uv]
 managed = true
-package = true
+package = false
