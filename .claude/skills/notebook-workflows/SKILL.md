@@ -39,10 +39,10 @@ Always use absolute imports from the package:
 
 ```python
 # ✅ CORRECT: Import from package
-from en_ud_trf.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
+from en_ud_trf.config import ASSETS_DIR
 
 # Load data using config paths
-df = pd.read_csv(RAW_DATA_DIR / "mydata.csv")
+df = pd.read_csv(ASSETS_DIR / "mydata.csv")
 ```
 
 **Why:** Paths are canonical, environment variables loaded, reproducible across clones.

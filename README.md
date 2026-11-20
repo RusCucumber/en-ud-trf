@@ -142,10 +142,7 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 
 ```
 .
-├── data/
-│   ├── raw/                         # Raw data files (e.g., UD treebanks)
-│   ├── processed/                   # Processed data files (e.g., .spacy corpora)
-│   └── external/                    # External data sources
+├── assets/                          # Data files (e.g., UD treebanks, .spacy corpora); git-ignored
 ├── src/
 │   └── en_ud_trf/                   # Main Python package
 │       └── config.py                # Paths and .env loading

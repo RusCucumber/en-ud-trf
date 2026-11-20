@@ -58,7 +58,7 @@ Your own terminal, `~/.gitconfig`, gh settings and the `origin` remote are untou
 
 Put key / certificate files (`*.pem`, `*.key`, service-account JSON, etc.) under `secrets/`. It is git-ignored and unreadable by Claude Code (sandboxed Bash `denyRead` + Read/Edit `permissions.deny`).
 
-- `*.pem` / `*.key` are denied (Bash, Read, Edit) only at the project root and in `src/`, `data/`, `notebooks/`, `results/`, `docs/`, `.github/`, `config/`, `scripts/` — not in dependency dirs such as `.venv/`, so CA bundles like `certifi/cacert.pem` stay readable.
+- `*.pem` / `*.key` are denied (Bash, Read, Edit) only at the project root and in `src/`, `assets/`, `notebooks/`, `results/`, `docs/`, `.github/`, `config/`, `scripts/` — not in dependency dirs such as `.venv/`, so CA bundles like `certifi/cacert.pem` stay readable.
 - Do not use broad globs like `**/*.pem` in either `sandbox.filesystem.denyRead` or `permissions.deny` `Read(...)`: Read deny rules are also merged into the sandbox, and `allowRead` cannot override glob denies, so this would block `.venv/.../certifi/cacert.pem` again. If you add a new top-level directory that may hold keys, add it to both lists in `.claude/settings.json`.
 - `tests/` is intentionally excluded so that dummy test certificates/keys used by pytest fixtures stay readable. Never put real secrets in `tests/`.
 

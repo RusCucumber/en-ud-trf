@@ -109,7 +109,7 @@ API_KEY=your_api_key
 Python code accesses environment variables by importing from `config.py`:
 
 ```python
-from {project_name}.config import WORK_DIR, DATA_DIR, RAW_DATA_DIR
+from {project_name}.config import WORK_DIR, ASSETS_DIR
 import os
 
 api_key = os.getenv("API_KEY")
@@ -125,10 +125,7 @@ Note that `{project_name}` must be replaced with your actual project package nam
 ```python
 from {project_name}.config import (
     WORK_DIR,           # repo root
-    DATA_DIR,           # data/
-    RAW_DATA_DIR,       # data/raw/
-    PROCESSED_DATA_DIR, # data/processed/
-    EXTERNAL_DATA_DIR,  # data/external/
+    ASSETS_DIR,         # assets/
     RESULT_DIR,         # results/
     FIGURE_RESULT_DIR,  # results/figures/
     MODEL_RESULT_DIR,   # results/models/
