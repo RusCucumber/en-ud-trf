@@ -51,7 +51,7 @@ Follow [docs/manual_setup_flow.md](./docs/manual_setup_flow.md):
 
 | File | Role | Loaded by |
 |------|------|-----------|
-| `.env` | Project secrets & settings (e.g., `API_KEY`, `DATABASE_URL`) | Python: `src/research_project_template/config.py` / R: `dotenv` package |
+| `.env` | Project secrets & settings (e.g., `API_KEY`, `DATABASE_URL`) | Python: `src/en_ud_trf/config.py` / R: `dotenv` package |
 | `.envrc` | Shell environment for the project directory (e.g., load `.env`, activate `.venv`) | [direnv](https://direnv.net/) |
 
 Both files are **git-ignored** and **unreadable by Claude Code** (`.claude/settings.json`).
@@ -145,7 +145,7 @@ This template is preconfigured for Claude Code. Details: **[docs/claude_code.md]
 │   ├── processed/                   # Processed data files
 │   └── external/                    # External data sources
 ├── src/
-│   └── research_project_template/   # Main Python package
+│   └── en_ud_trf/   # Main Python package
 │       └── config.py                # Paths and .env loading
 ├── tests/                           # pytest test cases
 ├── notebooks/
@@ -176,7 +176,7 @@ This template is preconfigured for Claude Code. Details: **[docs/claude_code.md]
 ├── pyproject.toml                   # Python project configuration
 ├── uv.lock                          # uv lock file
 ├── .python-version                  # Python version
-├── research-project-template.Rproj  # R project file
+├── en-ud-trf.Rproj  # R project file
 ├── .Rprofile                        # R profile (activates renv)
 ├── renv.lock                        # renv lock file
 ├── run_radian.sh                    # Launch radian (R console)

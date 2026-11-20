@@ -12,7 +12,7 @@ A skill for creating, executing, and integrating Marimo (`.py`) and Quarto R (`.
 - Creating a new Marimo interactive notebook in `notebooks/python/`
 - Creating a new Quarto R notebook in `notebooks/R/`
 - Running or debugging a notebook and handling environment issues
-- Linking notebook code to package functions in `src/research_project_template/`
+- Linking notebook code to package functions in `src/en_ud_trf/`
 - Understanding notebook caching, kernel selection, or dependency isolation
 - Rendering Quarto notebooks to HTML
 - Reproducing analysis from an existing notebook
@@ -26,7 +26,7 @@ A skill for creating, executing, and integrating Marimo (`.py`) and Quarto R (`.
 | `notebooks/R/template/template.qmd`       | Front matter + starter chunk for new R notebooks              |
 | `notebooks/R/template/new_r_notebook.sh`  | Copies the template to a timestamped `.qmd` in `notebooks/R/` |
 | `_quarto.yml`                             | Global Quarto configuration inherited by all `.qmd` files     |
-| `src/research_project_template/config.py` | Path constants to use in notebooks                            |
+| `src/en_ud_trf/config.py` | Path constants to use in notebooks                            |
 | `pyproject.toml`                          | Python dependencies                                           |
 | `renv.lock`                               | R package versions (used by Quarto)                           |
 
@@ -46,8 +46,8 @@ Always use absolute imports from the package:
 
 ```python
 # ✅ CORRECT: Import from package
-from research_project_template.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
-import research_project_template.loaders as loaders
+from en_ud_trf.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
+import en_ud_trf.loaders as loaders
 
 # Load data using config paths
 df = pd.read_csv(RAW_DATA_DIR / "mydata.csv")
@@ -166,7 +166,7 @@ Always save to paths defined in `config.py`:
 
 ```python
 # Python
-from research_project_template.config import FIGURE_RESULT_DIR, TABLE_RESULT_DIR
+from en_ud_trf.config import FIGURE_RESULT_DIR, TABLE_RESULT_DIR
 
 # Save figure
 fig.savefig(FIGURE_RESULT_DIR / "my_plot.png", dpi=300)
@@ -194,13 +194,13 @@ The `quarto render` steps below fail inside the Claude Code sandbox; see the not
 
 ### "ModuleNotFoundError" in a Notebook
 
-**Issue:** Notebook can't import from `research_project_template`
+**Issue:** Notebook can't import from `en_ud_trf`
 
 **Fix:**
 
 1. Ensure the notebook runs inside the uv-managed environment (`uv run marimo ...`)
 2. Restart the Marimo session
-3. Verify package is installed: `uv run python -c "import research_project_template"`
+3. Verify package is installed: `uv run python -c "import en_ud_trf"`
 
 ### "Package X not found" in Quarto
 
@@ -239,7 +239,7 @@ quarto render notebooks/R/notebook.qmd
 ## Best Practices
 
 - ✅ Use `here::here()` in R notebooks, never relative paths
-- ✅ Import from `research_project_template.config` in Python notebooks
+- ✅ Import from `en_ud_trf.config` in Python notebooks
 - ✅ Load `.env` at notebook start if using environment variables
 - ✅ Save outputs to `config.py` path constants
 - ✅ Create new R notebooks via `notebooks/R/template/new_r_notebook.sh` rather than by hand
