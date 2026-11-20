@@ -1,0 +1,74 @@
+{
+    "format_on_save": "on",
+    "tab_size": 4,
+    "hard_tabs": false,
+    "show_whitespaces": "all",
+    "languages": {
+        "Python": {
+            "format_on_save": "on",
+            "tab_size": 4,
+            "language_servers": ["ty", "ruff"],
+            "code_actions_on_format": {
+                "source.organizeImports.ruff": true,
+                "source.fixAll": true,
+            },
+            "formatter": {
+                "language_server": {
+                    "name": "ruff",
+                },
+            },
+        },
+        "R": {
+            "format_on_save": "on",
+            "tab_size": 4,
+            "language_servers": ["r_language_server"],
+        },
+        "TOML": {
+            "language_servers": ["tombi", "!r_language_server"],
+        },
+        "Plain Text": {
+            "soft_wrap": "none",
+        },
+        "CSV": {
+            "soft_wrap": "none",
+        },
+    },
+    "lsp": {
+        "ruff": {
+            "settings": {
+                "organizeImports": true,
+                "configuration": "${workspaceFolder}/pyproject.toml",
+            },
+        },
+        "ty": {
+            "settings": {
+                "diagnosticMode": "workspace",
+                "completions": {
+                    "autoImport": true,
+                    "completeFunctionParentheses": true,
+                },
+            },
+        },
+        "r_language_server": {
+            "settings": {
+                "r": {
+                    "lsp": {
+                        "diagnostics": true,
+                        "snippet_support": true,
+                    },
+                },
+            },
+        },
+    },
+    // Load .envrc via `direnv export json` so language servers, tasks and the terminal
+    // see the same environment variables (requires direnv + `direnv allow`)
+    "load_direnv": "direct",
+    "terminal": {
+        "detect_venv": "off",
+        "env": {
+            "R_HOME": "/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources", // Adjust according to your R version
+            "R_BIN": "/usr/local/bin/R",
+        },
+    },
+    "wrap_guides": [119],
+}

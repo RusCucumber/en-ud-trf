@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Bug",
+    "description": "Something isn't working",
+    "color": "#d73a4a"
+  },
+  {
+    "name": "Documentation",
+    "description": "Improvements or additions to documentation",
+    "color": "#0075ca"
+  },
+  {
+    "name": "Feature",
+    "description": "Addition or improvements of a new feature",
+    "color": "#a2eeef"
+  },
+  {
+    "name": "Test",
+    "description": "Addition or improvements of tests",
+    "color": "#d48d72"
+  },
+  {
+    "name": "Analysis",
+    "description": "Data analysis",
+    "color": "#1d76db"
+  },
+  {
+    "name": "Experiment",
+    "description": "Exploratory experiments",
+    "color": "#b60205"
+  },
+  {
+    "name": "Data",
+    "description": "Coding, cleaning, and organizing data",
+    "color": "#f9d0c4"
+  },
+  {
+    "name": "Chore",
+    "description": "Miscellaneous tasks, such as environment updates",
+    "color": "#e4e669"
+  }
+]

@@ -1,0 +1,23 @@
+author:
+  name: "Ryuki Matsuura"
+  affiliation: "Carnegie Mellon University"
+  email: "rmatsuur@andrew.cmu.edu"
+date: last-modified
+project:
+  type: default
+editor:
+  render-on-save: true
+format:
+  html:
+    code-background: true
+    toc: true
+    toc-location: right
+    html-math-method: katex
+    ascii: true
+    embed-resources: true
+    page-layout: full
+    df-print: kable
+    code-fold: true
+    theme: cosmo
+execute:
+  cache: true
