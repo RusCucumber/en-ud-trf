@@ -18,13 +18,8 @@
                 },
             },
         },
-        "R": {
-            "format_on_save": "on",
-            "tab_size": 4,
-            "language_servers": ["r_language_server"],
-        },
         "TOML": {
-            "language_servers": ["tombi", "!r_language_server"],
+            "language_servers": ["tombi"],
         },
         "Plain Text": {
             "soft_wrap": "none",
@@ -49,26 +44,12 @@
                 },
             },
         },
-        "r_language_server": {
-            "settings": {
-                "r": {
-                    "lsp": {
-                        "diagnostics": true,
-                        "snippet_support": true,
-                    },
-                },
-            },
-        },
     },
     // Load .envrc via `direnv export json` so language servers, tasks and the terminal
     // see the same environment variables (requires direnv + `direnv allow`)
     "load_direnv": "direct",
     "terminal": {
         "detect_venv": "off",
-        "env": {
-            "R_HOME": "/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources", // Adjust according to your R version
-            "R_BIN": "/usr/local/bin/R",
-        },
     },
     "wrap_guides": [119],
 }

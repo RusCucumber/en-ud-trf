@@ -165,7 +165,6 @@ Defined under `[dependency-groups] dev`:
 | `ruff` | Linting and formatting |
 | `pytest` | Testing framework |
 | `pypdf` | PDF processing utilities for development and testing |
-| `radian` | Enhanced R console (used via `run_radian.sh`) |
 
 ## Troubleshooting
 
