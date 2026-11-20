@@ -15,6 +15,12 @@ dependencies = [
   "transformers==4.30.2",
 ]
 
+[project.optional-dependencies]
+cupy = [
+  "cupy-cuda13x>=13.6.0",
+  "thinc>=8.1.12",
+]
+
 [dependency-groups]
 dev = [
   "pypdf>=6.7.5",
