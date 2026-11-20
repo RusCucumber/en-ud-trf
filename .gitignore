@@ -2,6 +2,10 @@
 !/assets/**/
 !/assets/**/.gitkeep
 
+/corpus/**
+!/corpus/**/
+!/corpus/**/.gitkeep
+
 /results/models/*.pt
 
 # Byte-compiled / optimized / DLL files

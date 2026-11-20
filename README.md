@@ -142,7 +142,8 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 
 ```
 .
-├── assets/                          # Data files (e.g., UD treebanks, .spacy corpora); git-ignored
+├── assets/                          # Raw data (e.g., UD treebanks in .conllu); git-ignored
+├── corpus/                          # Training data (e.g., .spacy corpora); git-ignored
 ├── src/
 │   └── en_ud_trf/                   # Main Python package
 ├── tests/                           # pytest test cases

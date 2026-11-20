@@ -20,7 +20,8 @@ A skill for creating, executing, and integrating Marimo (`.py`) notebooks with t
 | File                                      | Purpose                            |
 | ----------------------------------------- | ---------------------------------- |
 | `notebooks/python/`                       | Marimo (`.py`) notebooks           |
-| `assets/`                                 | Data files (git-ignored)           |
+| `assets/`                                 | Raw data (git-ignored)             |
+| `corpus/`                                 | Training data (git-ignored)        |
 | `results/`                                | Figures, tables, and models        |
 | `pyproject.toml`                          | Python dependencies                |
 
@@ -127,7 +128,7 @@ df.to_csv(RESULT_DIR / "tables" / "summary.csv", index=False)
 ## Best Practices
 
 - ✅ Import shared code from the `en_ud_trf` package in Python notebooks
-- ✅ Anchor data and output paths at the repository root (`assets/`, `results/`)
+- ✅ Anchor data and output paths at the repository root (`assets/`, `corpus/`, `results/`)
 - ✅ Read environment variables with `os.getenv()` (loaded by direnv, see README)
 
 ---
