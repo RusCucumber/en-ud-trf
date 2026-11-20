@@ -151,8 +151,9 @@ temp*
 sample*
 !template*
 
-# ignore oh-my-claudecode caches
+# ignore claudecode local files
 .omc
+CLAUDE.local.md
 
 # Secrets (keys / certificates) — also blocked from the Claude Code sandbox
 secrets/
