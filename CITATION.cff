@@ -10,6 +10,7 @@ abstract: >-
 authors:
   - family-names: Matsuura
     given-names: Ryuki
+    orcid: "https://orcid.org/0000-0002-9429-6257"
 version: 1.0.0
 date-released: "2026-11-20"
 license:
