@@ -6,6 +6,8 @@
 !/corpus/**/
 !/corpus/**/.gitkeep
 
+/training/
+
 /results/models/*.pt
 
 # Byte-compiled / optimized / DLL files

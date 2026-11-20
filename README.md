@@ -15,6 +15,7 @@ The model is meant to replace `en_ud_L1_combined_trf` in [V-CAT](https://github.
 - [Target Model](#target-model)
 - [Pipeline](#pipeline)
 - [Setup](#setup)
+- [Training](#training)
 - [Environment Variables](#environment-variables)
 - [Workflow](#workflow)
 - [Coding Agent (Claude Code)](#coding-agent-claude-code)
@@ -65,12 +66,27 @@ Requires [uv](https://docs.astral.sh/uv/getting-started/installation/) and [GitH
 git clone https://github.com/RusCucumber/en-ud-trf.git
 cd en-ud-trf
 uv sync
+uv sync --extra cupy   # on a CUDA 13 GPU machine: adds CuPy (cupy-cuda13x) for training
 ```
 
 For Claude Code, also log in to GitHub CLI (`gh auth login`) and install the plugins ([docs/manual_setup_flow.md](./docs/manual_setup_flow.md), steps 2 and 4).
 
 > [!IMPORTANT]
 > Claude Code's git commands run over **HTTPS + GitHub CLI** (SSH does not work inside its sandbox). This is set only for Claude via `env` in `.claude/settings.json` — your own SSH setup and global git/gh config stay unchanged; just run `gh auth login` once.
+
+## Training
+
+Train on GPU with the config in `configs/`, loading `scripts/cupy_compat.py` through `--code`:
+
+```bash
+uv run python -m spacy train configs/en_ud_trf_l1.cfg -o training/ --gpu-id 0 \
+  --code scripts/cupy_compat.py \
+  --paths.train corpus/L1_combined-ud-train.spacy \
+  --paths.dev corpus/L1_combined-ud-dev.spacy
+```
+
+> [!IMPORTANT]
+> `--code scripts/cupy_compat.py` is required with CuPy 13. thinc 8.1.x (pinned by spaCy 3.5) calls `cupy.cublas.nrm2` for gradient clipping, but CuPy 13 no longer imports the `cupy.cublas` submodule automatically, so training aborts at the first update with `AttributeError: module 'cupy' has no attribute 'cublas'`. The script just runs `import cupy.cublas`. Upgrading thinc (≥8.2) is not possible under `spacy<3.6`, and CuPy 12 has no CUDA 13 build.
 
 ## Environment Variables
 
@@ -144,6 +160,9 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 .
 ├── assets/                          # Raw data (e.g., UD treebanks in .conllu); git-ignored
 ├── corpus/                          # Training data (e.g., .spacy corpora); git-ignored
+├── configs/                         # spaCy training configs
+├── scripts/                         # Helper code for spaCy CLI (--code), e.g., CuPy 13 workaround
+├── training/                        # spacy train output (model-best, model-last); git-ignored
 ├── src/
 │   └── en_ud_trf/                   # Main Python package
 ├── tests/                           # pytest test cases
