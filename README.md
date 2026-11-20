@@ -54,7 +54,7 @@ graph LR
 2. **Convert**: CoNLL-U → `.spacy` with `spacy convert --converter conllu --n-sents 10`.
 3. **Config**: start from `spacy init config --pipeline tagger,parser --optimize accuracy --gpu`, then match the current model's settings (e.g., `max_steps` 20000, `warmup_linear` with `initial_rate` 1e-4).
 4. **Train** on a CUDA GPU; record the seed, treebank release, config, and library versions.
-5. **Evaluate** on the test set against the current model, and run V-CAT's regression checks (frequency tables of syntactic frames).
+5. **Evaluate** on the test set against the current model (scores saved as JSON in `metrics/`), and run V-CAT's regression checks (frequency tables of syntactic frames).
 6. **Package** as a wheel under a new name (e.g., `en_ud_trf`) with the license and sources in `meta.json`.
 7. **Release** publicly on the Hugging Face Hub, so that `pip`/`uv` can install it without authentication.
 
@@ -168,10 +168,7 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── tests/                           # pytest test cases
 ├── notebooks/
 │   └── python/                      # marimo notebooks
-├── results/
-│   ├── tables/                      # Generated tables
-│   ├── figures/                     # Generated figures
-│   └── models/                      # Trained models
+├── metrics/                         # Evaluation scores (spacy evaluate JSON output)
 ├── docs/
 │   ├── manual_setup_flow.md         # Manual setup steps
 │   └── claude_code.md               # Claude Code configuration
