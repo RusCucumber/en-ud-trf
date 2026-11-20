@@ -50,24 +50,24 @@ for token in doc:
 
 ## Model
 
-| Item          | Value                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------- |
-| Name          | `en_ud_trf_l1` 1.0.0                                                                          |
-| Pipeline      | `transformer` (`roberta-base`) → `tagger` → `parser`                                          |
-| Training data | UD_English-EWT, -GUM, -Pronouns, -PUD (see [`meta.json`](./meta.json))                        |
-| Config        | [`configs/en_ud_trf_l1.cfg`](./configs/en_ud_trf_l1.cfg)                                      |
-| Download      | [huggingface.co/RusCucumber/en_ud_trf_l1](https://huggingface.co/RusCucumber/en_ud_trf_l1)    |
-| License       | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (non-commercial use)    |
+| Item          | Value                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| Name          | `en_ud_trf_l1` 1.0.0                                                                       |
+| Pipeline      | `transformer` (`roberta-base`) → `tagger` → `parser`                                       |
+| Training data | UD_English-EWT, -GUM, -Pronouns, -PUD (see [`meta.json`](./meta.json))                     |
+| Config        | [`configs/en_ud_trf_l1.cfg`](./configs/en_ud_trf_l1.cfg)                                   |
+| Download      | [huggingface.co/RusCucumber/en_ud_trf_l1](https://huggingface.co/RusCucumber/en_ud_trf_l1) |
+| License       | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (non-commercial use) |
 
 Scores (`spacy evaluate`; test-set JSON in [`metrics/`](./metrics/)):
 
-| Split                                    | tag_acc | UAS   | LAS   | sents_f |
-| ---------------------------------------- | ------- | ----- | ----- | ------- |
-| dev (combined)                           | 0.972   | 0.934 | 0.911 | 0.914   |
-| test (combined)                          | 0.970   | 0.925 | 0.902 | 0.890   |
-| test (EWT)                               | 0.962   | 0.920 | 0.897 | 0.861   |
-| test (GUM)                               | 0.977   | 0.928 | 0.904 | 0.949   |
-| `en_ud_L1_combined_trf` v1.0.2 (dev)     | 0.972   | 0.937 | 0.917 | –       |
+| Split                                | tag_acc | UAS   | LAS   | sents_f |
+| ------------------------------------ | ------- | ----- | ----- | ------- |
+| dev (combined)                       | 0.972   | 0.934 | 0.911 | 0.914   |
+| test (combined)                      | 0.970   | 0.925 | 0.902 | 0.890   |
+| test (EWT)                           | 0.962   | 0.920 | 0.897 | 0.861   |
+| test (GUM)                           | 0.977   | 0.928 | 0.904 | 0.949   |
+| `en_ud_L1_combined_trf` v1.0.2 (dev) | 0.972   | 0.937 | 0.917 | –       |
 
 ## Target Model
 
@@ -267,8 +267,8 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 - **Code** (source, configs, scripts, docs): [MIT](./LICENSE).
 - **Model** (`en_ud_trf_l1`) and **evaluation outputs** (`metrics/`): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), inherited from the training treebanks. Commercial use is not permitted, and derivatives must be shared under the same license.
 
-| Training source                                                                   | License         |
-| --------------------------------------------------------------------------------- | --------------- |
+| Training source                                                                     | License         |
+| ----------------------------------------------------------------------------------- | --------------- |
 | [UD_English-EWT](https://github.com/UniversalDependencies/UD_English-EWT)           | CC BY-SA 4.0    |
 | [UD_English-GUM](https://github.com/UniversalDependencies/UD_English-GUM)           | CC BY-NC-SA 4.0 |
 | [UD_English-Pronouns](https://github.com/UniversalDependencies/UD_English-Pronouns) | CC BY-SA 4.0    |
@@ -294,5 +294,4 @@ Please also cite Kyle & Eguchi (2024), whose training setup this model reproduce
 ## References
 
 - Kyle, K., & Eguchi, M. (2024). Evaluating NLP models with written and spoken L2 samples. _Research Methods in Applied Linguistics_, _3_(2), 100120. https://doi.org/10.1016/j.rmal.2024.100120
-- Kyle, K., Eguchi, M., Miller, A., & Sither, T. (2022). A dependency treebank of spoken second language English. _BEA 2022_, 39–45. https://doi.org/10.18653/v1/2022.bea-1.7
 - spaCy documentation: [Training](https://spacy.io/usage/training), [CLI](https://spacy.io/api/cli), [Projects](https://spacy.io/usage/projects)

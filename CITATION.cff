@@ -38,19 +38,3 @@ references:
     start: "100120"
     year: 2024
     doi: 10.1016/j.rmal.2024.100120
-  - type: conference-paper
-    title: "A dependency treebank of spoken second language English"
-    authors:
-      - family-names: Kyle
-        given-names: Kristopher
-      - family-names: Eguchi
-        given-names: Masaki
-      - family-names: Miller
-        given-names: A.
-      - family-names: Sither
-        given-names: T.
-    collection-title: "Proceedings of the 17th Workshop on Innovative Use of NLP for Building Educational Applications (BEA 2022)"
-    start: "39"
-    end: "45"
-    year: 2022
-    doi: 10.18653/v1/2022.bea-1.7
