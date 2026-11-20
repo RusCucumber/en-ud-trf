@@ -1,7 +1,7 @@
-# Claude Code in This Template
+# Claude Code in This Repository
 
-This document describes how [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) is configured in this template.
-For installation steps, see [step 5 and 6 of the manual setup](./manual_setup_flow.md#5-install-claude-code-plugins).
+This document describes how [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) is configured in this repository.
+For installation steps, see [steps 4 and 5 of the manual setup](./manual_setup_flow.md#4-install-claude-code-plugins).
 
 - [Configuration Files](#configuration-files)
 - [Plugins](#plugins)
@@ -25,7 +25,7 @@ For installation steps, see [step 5 and 6 of the manual setup](./manual_setup_fl
 
 ## Plugins
 
-`.claude/settings.json` enables the following plugins. A plugin listed only in a project's settings is **not downloaded automatically** — install each one as described in [the manual setup](./manual_setup_flow.md#5-install-claude-code-plugins).
+`.claude/settings.json` enables the following plugins. A plugin listed only in a project's settings is **not downloaded automatically** — install each one as described in [the manual setup](./manual_setup_flow.md#4-install-claude-code-plugins).
 
 | Plugin | Marketplace | Purpose |
 |--------|-------------|---------|
@@ -43,11 +43,8 @@ For installation steps, see [step 5 and 6 of the manual setup](./manual_setup_fl
 
 | Rule | Loaded | Content |
 |------|--------|---------|
-| `sandbox-commands.md` | always | Short R / Quarto sandbox caveats, pointing to the two detailed rules below |
 | `obsidian.md` | always | Where Claude may read and write in the Obsidian vault |
 | `python-tdd.md` | `src/`, `tests/`, `scripts/` `*.py` | Test-driven development workflow |
-| `r-sandbox-execution.md` | `*.R`, `*.qmd` | How to run `Rscript` inside the sandbox |
-| `quarto-render-sandbox.md` | `*.qmd` | Why `quarto render` fails inside the sandbox |
 
 - Keep rules short and do not repeat what a skill already says; link to the skill instead.
 - Put caveats that apply to **commands** (not files) in an always-loaded rule: a path-scoped rule is not loaded when Claude only runs a Bash command.
@@ -62,7 +59,7 @@ Agent Skills live in `.claude/skills/`. Each `SKILL.md` describes when it applie
 | [anthropics/skills](https://github.com/anthropics/skills) | `doc-coauthoring`, `docx`, `pdf`, `pptx`, `skill-creator`, `xlsx` | `gh skill update` |
 | [obsidianmd/obsidian-skills](https://github.com/obsidianmd/obsidian-skills) | `obsidian-markdown` | `gh skill update` |
 | oh-my-claudecode | `wiki` | updated with oh-my-claudecode |
-| this repository | `git-strategy`, `notebook-workflows`, `python-environment`, `python-code-quality`, `pytest-in-uv`, `r-environment` | edit directly |
+| this repository | `git-strategy`, `notebook-workflows`, `python-environment`, `python-code-quality`, `pytest-in-uv` | edit directly |
 
 - Upstream skills record their source in the `metadata` frontmatter (`github-repo`, `github-path`). `gh skill update` keeps extra local files such as `LICENSE.txt`.
 - Repository skills each own one topic. For example, `uv sync` / `uv add` are described only in `python-environment`, and the others link to it. Keep it that way when editing.
@@ -71,9 +68,8 @@ Agent Skills live in `.claude/skills/`. Each `SKILL.md` describes when it applie
 
 Claude Code runs Bash commands in a sandbox configured in `.claude/settings.json`.
 
-- **Git over HTTPS**: SSH does not work inside the sandbox. Claude's git commands use HTTPS + GitHub CLI credentials via `GIT_CONFIG_*` in `env`; your own SSH setup and global git/gh config are untouched. See [step 3 of the manual setup](./manual_setup_flow.md#3-set-up-github-authentication-for-claude-code-github-cli).
-- **Secrets**: `.env*`, `.envrc`, `secrets/`, and `*.pem` / `*.key` in project directories are unreadable by Claude. See [step 4 of the manual setup](./manual_setup_flow.md#4-optional-set-environment-variables).
-- **R / Quarto**: plain `Rscript` hangs and `quarto render` fails at the Sass step inside the sandbox. Claude follows the rules above; render the final HTML yourself.
+- **Git over HTTPS**: SSH does not work inside the sandbox. Claude's git commands use HTTPS + GitHub CLI credentials via `GIT_CONFIG_*` in `env`; your own SSH setup and global git/gh config are untouched. See [step 2 of the manual setup](./manual_setup_flow.md#2-set-up-github-authentication-for-claude-code-github-cli).
+- **Secrets**: `.env*`, `.envrc`, `secrets/`, and `*.pem` / `*.key` in project directories are unreadable by Claude. See [step 3 of the manual setup](./manual_setup_flow.md#3-optional-set-environment-variables).
 
 ## Codex (Second-Opinion Reviews)
 

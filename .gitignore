@@ -133,17 +133,6 @@ venv.bak/
 cython_debug/
 
 .DS_Store
-.Rproj.user
-
-# Quarto Cache
-notebooks/*/*_cache
-notebooks/*/*_files
-
-# R
-.Rhistory
-/.quarto/
-**/*.quarto_ipynb
-notebooks/R/*_cache
 
 # Automatic Setup Log Files
 .setup-log.json
@@ -162,8 +151,9 @@ temp*
 sample*
 !template*
 
-# ignore oh-my-claudecode caches
+# ignore claudecode local files
 .omc
+CLAUDE.local.md
 
 # Secrets (keys / certificates) — also blocked from the Claude Code sandbox
 secrets/

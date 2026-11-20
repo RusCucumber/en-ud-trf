@@ -43,7 +43,7 @@ This repository uses **GitHub Flow** — all work branches off `main` and merges
 | `feat/`       | New Python package functionality      | Engineering Task      |
 | `fix/`        | Bug fixes                             | Engineering Task      |
 | `test/`       | Test additions/updates                | Engineering Task      |
-| `analysis/`   | Analysis notebooks (`.ipynb`, `.qmd`) | Analysis Task         |
+| `analysis/`   | Analysis notebooks (marimo `.py`)     | Analysis Task         |
 | `experiment/` | Experimental notebooks                | Analysis Task         |
 | `data/`       | Manual data corrections/cleaning      | General Task          |
 | `doc/`        | Documentation changes                 | General Task          |
@@ -62,7 +62,7 @@ Three issue templates live in `.github/ISSUE_TEMPLATE/`. **Always create an issu
 | Template         | File                   | Title prefix | Label                                         | Branch prefixes            | Workflow                                                                                                               |
 | ---------------- | ---------------------- | ------------ | --------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Engineering Task | `engineering_task.yml` | `[Dev]`      | `Feature` / `Bug` / `Test` (pick one)         | `feat/`, `fix/`, `test/`   | branch → implement → add/update tests → ensure tests pass → PR                                                         |
-| Analysis Task    | `analysis_task.yml`    | `[Analysis]` | `Analysis`                                    | `analysis/`, `experiment/` | branch → create notebook (`notebooks/python/*.ipynb` or `notebooks/R/*.qmd`) → PR → summarize results in issue comment |
+| Analysis Task    | `analysis_task.yml`    | `[Analysis]` | `Analysis`                                    | `analysis/`, `experiment/` | branch → create notebook (`notebooks/python/*.py`) → PR → summarize results in issue comment |
 | General Task     | `general_task.yml`     | `[Task]`     | `Data` / `Documentation` / `Chore` (pick one) | `data/`, `doc/`, `chore/`  | branch → implement → PR                                                                                                |
 
 ### Issue Template Usage (REQUIRED)
@@ -125,7 +125,7 @@ data/raw/interviews.csv
 
 ## Action Steps
 - [ ] Create a branch named `analysis/filled-pause-rate-#<issue-number>`
-- [ ] Create a Python/R notebook
+- [ ] Create a Python notebook
 - [ ] Push the branch, open a PR, and review the outcome
 - [ ] Summarize the results in a comment on this Issue
 
@@ -138,20 +138,20 @@ EOF
 
 ```bash
 gh issue create \
-  --title "[Task] update renv.lock for new tidyverse version" \
+  --title "[Task] update uv.lock for new marimo version" \
   --label "Chore" \
   --body "$(cat <<'EOF'
 ## Task Description
-Upgrade tidyverse to 2.0 and update renv.lock accordingly.
+Upgrade marimo to the latest release and update uv.lock accordingly.
 
 ## Branch Type
 - [x] `chore/`: Environment setup or dependency updates
 
 ## Task Details
-Run renv::update("tidyverse") and renv::snapshot() after verifying notebooks render correctly.
+Run `uv lock --upgrade-package marimo` and `uv sync`, then verify notebooks still run.
 
 ## Action Steps
-- [ ] Create a branch named `chore/update-tidyverse-#<issue-number>`
+- [ ] Create a branch named `chore/update-marimo-#<issue-number>`
 - [ ] Implement the task as described
 - [ ] Push the branch, open a PR, and review the changes
 
@@ -179,5 +179,5 @@ Format: `[tag] short description` — keep the description concise and in lowerc
 - Do not push directly to `main`; always use a PR
 - Do not use `--no-verify` or skip CI checks; fix root causes
 - Do not push over SSH, change the user's git/gh config, or try to work around the sandbox; rely on the Claude-only HTTPS setup (see [Pushing (HTTPS)](#pushing-https))
-- Do not change `uv.lock` or `renv.lock` unless the dependency change is intentional
+- Do not change `uv.lock` unless the dependency change is intentional
 - CI workflow (`.github/workflows/python_tests.yaml`) is currently disabled — do not re-enable until tests exist

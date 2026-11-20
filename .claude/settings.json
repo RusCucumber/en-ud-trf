@@ -51,7 +51,6 @@
             "Skill(python-environment)",
             "Skill(python-code-quality)",
             "Skill(pytest-in-uv)",
-            "Skill(r-environment)",
             "Skill(git-strategy)",
             "Skill(notebook-workflows)"
         ],
@@ -146,8 +145,8 @@
     "enabledPlugins": {
         "genshijin@genshijin": true,
         "oh-my-claudecode@omc": true,
-        "superpowers@anthropic-plugin-directory": true,
-        "claude-mem@thedotmack": true
+        "claude-mem@thedotmack": true,
+        "superpowers@anthropic-plugin-directory": true
     },
     "sandbox": {
         "enabled": true,

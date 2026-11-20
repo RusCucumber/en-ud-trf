@@ -38,27 +38,6 @@
         "-vv",
         "-s"
     ],
-    "r.sessionWatcher": true,
-    "r.plot.useHttpgd": true,
-    "r.workspaceViewer.showObjectSize": true,
-    "r.workspaceViewer.removeHiddenItems": false,
-    "r.rmarkdown.knit.openOutputFile": true,
-    "terminal.integrated.env.osx": {
-        "R_HOME": "/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources", // Adjust according to your R version
-        "R_BIN": "/usr/local/bin/R"
-    },
-    "r.bracketedPaste": true,
-    "r.rterm.mac": "${workspaceFolder}/run_radian.sh",
-    "r.rterm.option": [
-        "--no-save",
-        "--no-restore"
-    ],
-    "[r]": {
-        "editor.formatOnSave": true,
-        "editor.tabSize": 4,
-        "editor.detectIndentation": false
-    },
-    "quarto.render.renderOnSave": true,
     "chat.tools.terminal.enableAutoApprove": true,
     "chat.tools.terminal.autoApprove": {
         "cd": false,
