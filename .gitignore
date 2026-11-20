@@ -6,7 +6,7 @@
 !/corpus/**/
 !/corpus/**/.gitkeep
 
-/results/models/*.pt
+/training/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

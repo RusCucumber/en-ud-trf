@@ -22,7 +22,7 @@ A skill for creating, executing, and integrating Marimo (`.py`) notebooks with t
 | `notebooks/python/`                       | Marimo (`.py`) notebooks           |
 | `assets/`                                 | Raw data (git-ignored)             |
 | `corpus/`                                 | Training data (git-ignored)        |
-| `results/`                                | Figures, tables, and models        |
+| `metrics/`                                | Evaluation scores and outputs      |
 | `pyproject.toml`                          | Python dependencies                |
 
 ## Python Notebooks (Marimo)
@@ -85,18 +85,18 @@ All dependencies are shared by the project and notebooks (no separate `requireme
 
 ### Saving Outputs from Notebooks
 
-Always save under `results/` (`figures/`, `tables/`, `models/`), anchored at the repository root:
+Always save under `metrics/`, anchored at the repository root:
 
 ```python
 from pathlib import Path
 
-RESULT_DIR = Path(__file__).parents[2] / "results"
+METRICS_DIR = Path(__file__).parents[2] / "metrics"
 
 # Save figure
-fig.savefig(RESULT_DIR / "figures" / "my_plot.png", dpi=300)
+fig.savefig(METRICS_DIR / "my_plot.png", dpi=300)
 
 # Save table
-df.to_csv(RESULT_DIR / "tables" / "summary.csv", index=False)
+df.to_csv(METRICS_DIR / "summary.csv", index=False)
 ```
 
 ---
@@ -128,7 +128,7 @@ df.to_csv(RESULT_DIR / "tables" / "summary.csv", index=False)
 ## Best Practices
 
 - ✅ Import shared code from the `en_ud_trf` package in Python notebooks
-- ✅ Anchor data and output paths at the repository root (`assets/`, `corpus/`, `results/`)
+- ✅ Anchor data and output paths at the repository root (`assets/`, `corpus/`, `metrics/`)
 - ✅ Read environment variables with `os.getenv()` (loaded by direnv, see README)
 
 ---
