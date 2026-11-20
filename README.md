@@ -229,11 +229,7 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── scripts/                         # Helper code for spaCy CLI (--code), e.g., CuPy 13 workaround
 ├── training/                        # spacy train output (model-best, model-last); git-ignored
 ├── packages/                        # spacy package output (wheel); git-ignored
-├── src/
-│   └── en_ud_trf/                   # Main Python package
 ├── tests/                           # pytest test cases
-├── notebooks/
-│   └── python/                      # marimo notebooks
 ├── metrics/                         # Evaluation scores (spacy evaluate JSON output)
 ├── docs/
 │   ├── manual_setup_flow.md         # Manual setup steps
