@@ -55,7 +55,7 @@ graph LR
 3. **Config**: start from `spacy init config --pipeline tagger,parser --optimize accuracy --gpu`, then match the current model's settings (e.g., `max_steps` 20000, `warmup_linear` with `initial_rate` 1e-4).
 4. **Train** on a CUDA GPU; record the seed, treebank release, config, and library versions.
 5. **Evaluate** on the test set against the current model (scores saved as JSON in `metrics/`), and run V-CAT's regression checks (frequency tables of syntactic frames).
-6. **Package** as a wheel under a new name (e.g., `en_ud_trf`) with the license and sources in `meta.json`.
+6. **Package** as a wheel under a new name (`en_ud_trf_l1`) with the license and sources in `meta.json`.
 7. **Release** publicly on the Hugging Face Hub, so that `pip`/`uv` can install it without authentication.
 
 ## Setup
@@ -87,6 +87,17 @@ uv run python -m spacy train configs/en_ud_trf_l1.cfg -o training/ --gpu-id 0 \
 
 > [!IMPORTANT]
 > `--code scripts/cupy_compat.py` is required with CuPy 13. thinc 8.1.x (pinned by spaCy 3.5) calls `cupy.cublas.nrm2` for gradient clipping, but CuPy 13 no longer imports the `cupy.cublas` submodule automatically, so training aborts at the first update with `AttributeError: module 'cupy' has no attribute 'cublas'`. The script just runs `import cupy.cublas`. Upgrading thinc (≥8.2) is not possible under `spacy<3.6`, and CuPy 12 has no CUDA 13 build.
+
+## Packaging
+
+Build a wheel from the trained model with the metadata in `meta.json` (`lang` + `name` give the package name `en_ud_trf_l1`):
+
+```bash
+uv run python -m spacy package training/model-best packages/ \
+  --meta-path meta.json --build wheel --force
+```
+
+The wheel is written to `packages/en_ud_trf_l1-<version>/dist/`. `--build wheel` needs the `wheel` package (dev dependency).
 
 ## Environment Variables
 
@@ -163,6 +174,7 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 ├── configs/                         # spaCy training configs
 ├── scripts/                         # Helper code for spaCy CLI (--code), e.g., CuPy 13 workaround
 ├── training/                        # spacy train output (model-best, model-last); git-ignored
+├── packages/                        # spacy package output (wheel); git-ignored
 ├── src/
 │   └── en_ud_trf/                   # Main Python package
 ├── tests/                           # pytest test cases
@@ -187,6 +199,7 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 │
 ├── pyproject.toml                   # Python project configuration
 ├── uv.lock                          # uv lock file
+├── meta.json                        # Model metadata for spacy package (name, version, license, sources)
 ├── .python-version                  # Python version
 ├── Dockerfile                       # Python test image
 ├── CLAUDE.local.md                        # Project instructions for Claude (create per project)

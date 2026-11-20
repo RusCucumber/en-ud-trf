@@ -1,0 +1,31 @@
+{
+    "lang": "en",
+    "name": "ud_trf_l1",
+    "version": "1.0.0",
+    "description": "RoBERTa-based POS tagger and UD dependency parser for English (PTB XPOS, UD v2 relations)",
+    "author": "Ryuki Matsuura",
+    "license": "CC BY-SA 4.0",
+    "sources": [
+        {
+            "name": "UD_English-EWT",
+            "url": "https://github.com/UniversalDependencies/UD_English-EWT",
+            "license": "CC BY-SA 4.0"
+        },
+        {
+            "name": "UD_English-GUM",
+            "url": "https://github.com/UniversalDependencies/UD_English-GUM",
+            "license": "CC BY-NC-SA 4.0"
+        },
+        {
+            "name": "UD_English-Pronouns",
+            "url": "https://github.com/UniversalDependencies/UD_English-Pronouns",
+            "license": "CC BY-SA 4.0"
+        },
+        {
+            "name": "UD_English-PUD",
+            "url": "https://github.com/UniversalDependencies/UD_English-PUD",
+            "license": "CC BY-SA 3.0"
+        },
+        { "name": "roberta-base", "url": "https://huggingface.co/roberta-base", "license": "MIT" }
+    ]
+}
