@@ -1,7 +1,7 @@
 [project]
 name = "en-ud-trf"
 version = "0.1.0"
-description = "Add your description here"
+description = "Training a spaCy transformer POS tagger and Universal Dependencies parser for English, for use in V-CAT"
 readme = "README.md"
 requires-python = ">= 3.11"
 authors = [

@@ -1,85 +1,33 @@
 # Manual Setup Flow
 
-Follow these steps after creating a repository from this template. Steps marked **[Optional]** can be skipped.
+Follow these steps after cloning this repository. Steps marked **[Optional]** can be skipped.
 
-- [1. Rename the Project](#1-rename-the-project)
-- [2. Set Up Python & R Environment](#2-set-up-python--r-environment)
-- [3. Set Up GitHub Authentication for Claude Code (GitHub CLI)](#3-set-up-github-authentication-for-claude-code-github-cli)
-- [4. [Optional] Set Environment Variables](#4-optional-set-environment-variables)
-- [5. Install Claude Code Plugins](#5-install-claude-code-plugins)
-- [6. [Optional] Set Up `CLAUDE.md`](#6-optional-set-up-claudemd)
+- [1. Set Up the Python Environment](#1-set-up-the-python-environment)
+- [2. Set Up GitHub Authentication for Claude Code (GitHub CLI)](#2-set-up-github-authentication-for-claude-code-github-cli)
+- [3. [Optional] Set Environment Variables](#3-optional-set-environment-variables)
+- [4. Install Claude Code Plugins](#4-install-claude-code-plugins)
+- [5. [Optional] Set Up `CLAUDE.md`](#5-optional-set-up-claudemd)
 
-## 1. Rename the Project
-
-Replace `research-project-template` / `research_project_template` with your project name.
-
-- [ ] `pyproject.toml`
-    ```toml
-    [project]
-    name = "research-project-template" # Replace with your project name
-    version = "0.1.0"
-    description = "Add your description here"
-
-    :
-
-    [tool.hatch.build.targets.wheel]
-    packages = ["src/research_project_template"] # Adjust this to match your package structure
-    ```
-- [ ] Rename `src/research_project_template/` to match your package name.
-- [ ] Rename `research-project-template.Rproj` to match your project name.
-- [ ] Update the package imports:
-    - `notebooks/python/marimo_sample.py`
-    - `.claude/skills/notebook-workflows/SKILL.md`
-- [ ] Update `source` in `.github/ruleset-main_push_block.json` to your repository (`<owner>/<repo>`).
-
-> [!TIP]
-> Find the remaining occurrences with:
-> ```bash
-> git grep -n -e research-project-template -e research_project_template -- ':!uv.lock' ':!renv.lock'
-> ```
-
-## 2. Set Up Python & R Environment
+## 1. Set Up the Python Environment
 
 - [ ] Sync Python dependencies using uv:
     ```bash
     uv sync
     ```
-- [ ] Restore R packages using renv (in R):
-    ```r
-    renv::restore()
+
+> [!IMPORTANT]
+> Keep Python at **3.11** (`.python-version`, `[tool.ruff] target-version`, `[tool.ty.environment] python-version`, and the `Dockerfile` base image).
+> The trained model must load in V-CAT, which pins `spacy>=3.5.3,<3.6.0` and `transformers<4.31`; those versions do not support newer Python releases.
+> Change the Python version only together with V-CAT's spaCy pins.
+
+Training needs a CUDA GPU (training `roberta-base` on CPU does not finish in a practical time).
+
+- [ ] On the training machine, check the CUDA version and pick a matching `torch` build:
+    ```bash
+    nvidia-smi
     ```
 
-**[Optional]** If you use different Python & R versions, set them using uv & rig:
-
-- *Python version*
-    - [ ] Command line:
-        ```bash
-        uv python pin {YOUR_PYTHON_VERSION}
-        ```
-    - [ ] `pyproject.toml`:
-        ```toml
-        [tool.ruff]
-        target-version = "py311" # Update according to your Python version
-
-        line-length = 119
-
-        [tool.ruff.lint]
-        select = ["E", "W", "F", "I", "C90"]
-        ignore = ["E203"]
-
-        [tool.ty.environment]
-        python-version = "3.11" # Update according to your Python version
-        ```
-    - [ ] `Dockerfile`: update the base image (`FROM python:3.11-slim-trixie`).
-- *R version*
-    - [ ] Command line:
-        ```bash
-        rig add {YOUR_R_VERSION}
-        rig default {YOUR_R_VERSION}
-        ```
-    - [ ] `run_radian.sh`: update the R framework path (`Versions/4.4-arm64`).
-
-## 3. Set Up GitHub Authentication for Claude Code (GitHub CLI)
+## 2. Set Up GitHub Authentication for Claude Code (GitHub CLI)
 
 Claude Code's sandbox cannot reach the ssh-agent socket and denies reading `~/.ssh/**`, so git over SSH fails inside Claude Code.
 
@@ -99,26 +47,22 @@ Your own terminal, `~/.gitconfig`, gh settings and the `origin` remote are untou
 > [!NOTE]
 > Requires git 2.31+ (`git --version`).
 
-## 4. [Optional] Set Environment Variables
+## 3. [Optional] Set Environment Variables
 
-- [ ] Create a `.env` file in the project root to manage environment variables for both Python and R.
+- [ ] Create a `.env` file in the project root to manage environment variables, e.g., a Hugging Face token for pushing the packaged model:
     ```
-    DATABASE_URL=your_database_url
-    API_KEY=your_api_key
+    HF_TOKEN=your_hugging_face_token
     ```
-- Load them in Python by importing `config.py`, and in R with the `dotenv` package:
-    ```r
-    library(dotenv)
-    ```
+- Load them in Python by importing `config.py`.
 - To share them with your shell and editor, see [Environment Variables](../README.md#environment-variables) in the README (direnv).
 
 Put key / certificate files (`*.pem`, `*.key`, service-account JSON, etc.) under `secrets/`. It is git-ignored and unreadable by Claude Code (sandboxed Bash `denyRead` + Read/Edit `permissions.deny`).
 
-- `*.pem` / `*.key` are denied (Bash, Read, Edit) only at the project root and in `src/`, `data/`, `notebooks/`, `results/`, `docs/`, `.github/`, `config/`, `scripts/` — not in dependency dirs such as `.venv/` or `renv/`, so CA bundles like `certifi/cacert.pem` stay readable.
+- `*.pem` / `*.key` are denied (Bash, Read, Edit) only at the project root and in `src/`, `data/`, `notebooks/`, `results/`, `docs/`, `.github/`, `config/`, `scripts/` — not in dependency dirs such as `.venv/`, so CA bundles like `certifi/cacert.pem` stay readable.
 - Do not use broad globs like `**/*.pem` in either `sandbox.filesystem.denyRead` or `permissions.deny` `Read(...)`: Read deny rules are also merged into the sandbox, and `allowRead` cannot override glob denies, so this would block `.venv/.../certifi/cacert.pem` again. If you add a new top-level directory that may hold keys, add it to both lists in `.claude/settings.json`.
 - `tests/` is intentionally excluded so that dummy test certificates/keys used by pytest fixtures stay readable. Never put real secrets in `tests/`.
 
-## 5. Install Claude Code Plugins
+## 4. Install Claude Code Plugins
 
 `.claude/settings.json` enables four plugins, but a plugin listed only in a project's settings is not downloaded automatically. See [docs/claude_code.md](./claude_code.md#plugins) for what each plugin does.
 
@@ -147,7 +91,7 @@ Put key / certificate files (`*.pem`, `*.key`, service-account JSON, etc.) under
     ```
 - claude-mem stores data in `~/.claude-mem/`; check its size now and then (see [Token Saving](./claude_code.md#token-saving)).
 
-## 6. [Optional] Set Up `CLAUDE.md`
+## 5. [Optional] Set Up `CLAUDE.md`
 
 - [ ] Write project-specific instructions and context in `CLAUDE.md` at the **repository root**.
     - Do not edit `.claude/CLAUDE.md`: it is managed by oh-my-claudecode and rewritten by `omc-setup`.
