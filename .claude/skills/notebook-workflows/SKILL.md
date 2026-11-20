@@ -20,7 +20,8 @@ A skill for creating, executing, and integrating Marimo (`.py`) notebooks with t
 | File                                      | Purpose                            |
 | ----------------------------------------- | ---------------------------------- |
 | `notebooks/python/`                       | Marimo (`.py`) notebooks           |
-| `src/en_ud_trf/config.py`                 | Path constants to use in notebooks |
+| `assets/`                                 | Data files (git-ignored)           |
+| `results/`                                | Figures, tables, and models        |
 | `pyproject.toml`                          | Python dependencies                |
 
 ## Python Notebooks (Marimo)
@@ -39,13 +40,16 @@ Always use absolute imports from the package:
 
 ```python
 # ✅ CORRECT: Import from package
-from en_ud_trf.config import ASSETS_DIR
+from en_ud_trf import some_module
 
-# Load data using config paths
+# Load data with a path anchored at the repository root
+from pathlib import Path
+
+ASSETS_DIR = Path(__file__).parents[2] / "assets"
 df = pd.read_csv(ASSETS_DIR / "mydata.csv")
 ```
 
-**Why:** Paths are canonical, environment variables loaded, reproducible across clones.
+**Why:** Anchoring paths at the repository root keeps notebooks reproducible across clones and independent of the working directory.
 
 ### 3. Run a Notebook from the Command Line
 
@@ -80,16 +84,18 @@ All dependencies are shared by the project and notebooks (no separate `requireme
 
 ### Saving Outputs from Notebooks
 
-Always save to paths defined in `config.py`:
+Always save under `results/` (`figures/`, `tables/`, `models/`), anchored at the repository root:
 
 ```python
-from en_ud_trf.config import FIGURE_RESULT_DIR, TABLE_RESULT_DIR
+from pathlib import Path
+
+RESULT_DIR = Path(__file__).parents[2] / "results"
 
 # Save figure
-fig.savefig(FIGURE_RESULT_DIR / "my_plot.png", dpi=300)
+fig.savefig(RESULT_DIR / "figures" / "my_plot.png", dpi=300)
 
 # Save table
-df.to_csv(TABLE_RESULT_DIR / "summary.csv", index=False)
+df.to_csv(RESULT_DIR / "tables" / "summary.csv", index=False)
 ```
 
 ---
@@ -120,13 +126,13 @@ df.to_csv(TABLE_RESULT_DIR / "summary.csv", index=False)
 
 ## Best Practices
 
-- ✅ Import from `en_ud_trf.config` in Python notebooks
-- ✅ Load `.env` at notebook start if using environment variables
-- ✅ Save outputs to `config.py` path constants
+- ✅ Import shared code from the `en_ud_trf` package in Python notebooks
+- ✅ Anchor data and output paths at the repository root (`assets/`, `results/`)
+- ✅ Read environment variables with `os.getenv()` (loaded by direnv, see README)
 
 ---
 
 ## See Also
 
 - [python-environment skill](../python-environment/SKILL.md) — Manage Python version and dependencies
-- [`src/en_ud_trf/config.py`](../../../src/en_ud_trf/config.py) — Path constants and `.env` loading
+- [README](../../../README.md#environment-variables) — Environment variables (`.env` via direnv)

@@ -53,8 +53,7 @@ Your own terminal, `~/.gitconfig`, gh settings and the `origin` remote are untou
     ```
     HF_TOKEN=your_hugging_face_token
     ```
-- Load them in Python by importing `config.py`.
-- To share them with your shell and editor, see [Environment Variables](../README.md#environment-variables) in the README (direnv).
+- Python does not load `.env` itself. Load it into the shell with direnv (see [Environment Variables](../README.md#environment-variables) in the README), then read values with `os.getenv()`.
 
 Put key / certificate files (`*.pem`, `*.key`, service-account JSON, etc.) under `secrets/`. It is git-ignored and unreadable by Claude Code (sandboxed Bash `denyRead` + Read/Edit `permissions.deny`).
 
