@@ -277,7 +277,23 @@ This repository is preconfigured for Claude Code. Details: **[docs/claude_code.m
 
 ## Citation
 
-If you use the model or this code, please cite it ([`CITATION.cff`](./CITATION.cff); GitHub's "Cite this repository" button gives APA and BibTeX):
+> [!IMPORTANT]
+> **If you use this model in research, please cite Kyle & Eguchi (2024) as the primary reference.** This model reproduces their training setup with openly licensed data; the method and its evaluation are theirs.
+
+```bibtex
+@article{kyle_eguchi_2024,
+  author  = {Kyle, Kristopher and Eguchi, Masaki},
+  title   = {Evaluating {NLP} models with written and spoken {L2} samples},
+  journal = {Research Methods in Applied Linguistics},
+  volume  = {3},
+  number  = {2},
+  pages   = {100120},
+  year    = {2024},
+  doi     = {10.1016/j.rmal.2024.100120}
+}
+```
+
+If you also need to refer to this specific model or code (e.g., for reproducibility), cite it in addition ([`CITATION.cff`](./CITATION.cff)):
 
 ```bibtex
 @software{matsuura_2026_en_ud_trf_l1,
@@ -289,7 +305,7 @@ If you use the model or this code, please cite it ([`CITATION.cff`](./CITATION.c
 }
 ```
 
-Please also cite Kyle & Eguchi (2024), whose training setup this model reproduces, and the UD treebanks listed above.
+Please also credit the UD treebanks listed above.
 
 ## References
 
